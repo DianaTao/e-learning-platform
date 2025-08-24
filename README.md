@@ -23,7 +23,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/DianaTao/e-learning-platform.git
    cd e-learning-platform
    ```
 
