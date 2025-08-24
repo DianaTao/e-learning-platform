@@ -70,11 +70,13 @@ export const ProgressAnalytics: React.FC = () => {
     timeSpent: Math.round(course.timeSpent / 60 * 10) / 10
   }));
 
-  // Generate heatmap data for the last 365 days
+  // Generate heatmap data for the last 364 days (52 weeks × 7 days)
   const generateHeatmapData = () => {
     const data = [];
-    for (let i = 364; i >= 0; i--) {
-      const date = subDays(new Date(), i);
+    const totalDays = 52 * 7; // 364 days
+    
+    for (let i = 0; i < totalDays; i++) {
+      const date = subDays(new Date(), totalDays - 1 - i);
       const dayData = analytics.studyTime.daily.find(d => 
         format(new Date(d.date), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
       );
@@ -83,13 +85,15 @@ export const ProgressAnalytics: React.FC = () => {
         date: format(date, 'yyyy-MM-dd'),
         count: dayData ? Math.floor(dayData.minutes / 30) : 0, // Convert to intensity level
         day: date.getDay(),
-        week: Math.floor(i / 7)
+        week: Math.floor(i / 7) // 7 days per week in new layout
       });
     }
     return data;
   };
 
   const heatmapData = generateHeatmapData();
+  console.log('Heatmap data length:', heatmapData.length);
+  console.log('Expected: 364 days (26 weeks × 14 days)');
 
   const getIntensityColor = (count: number) => {
     if (count === 0) return '#ebedf0';
@@ -285,30 +289,76 @@ export const ProgressAnalytics: React.FC = () => {
       <div className="card">
         <div className="card-header">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Learning Activity</h2>
-          <p className="text-gray-600">Daily activity over the past year</p>
+          <p className="text-gray-600">Daily activity over the past year (52 weeks × 7 days)</p>
         </div>
         <div className="card-body">
           <div className="overflow-x-auto">
-            <div className="grid grid-cols-53 gap-1 w-fit">
-              {Array.from({ length: 53 }, (_, weekIndex) => (
-                <div key={weekIndex} className="grid grid-rows-7 gap-1">
-                  {Array.from({ length: 7 }, (_, dayIndex) => {
-                    const dataIndex = weekIndex * 7 + dayIndex;
-                    const data = heatmapData[dataIndex];
-                    if (!data) return <div key={dayIndex} className="w-3 h-3" />;
-                    
-                    return (
-                      <div
-                        key={dayIndex}
-                        className="w-3 h-3 rounded-sm"
-                        style={{ backgroundColor: getIntensityColor(data.count) }}
-                        title={`${data.date}: ${data.count * 30} minutes`}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
+            <div className="mb-4 text-sm text-gray-600">
+              Grid: 52 columns × 7 rows = 364 days | Data points: {heatmapData.length}
             </div>
+            
+            {/* Month Headers */}
+            <div className="flex gap-1 mb-2 ml-16">
+              {['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'].map((month, monthIndex) => {
+                // Each month spans approximately 4-5 weeks (52 weeks / 12 months ≈ 4.33 weeks per month)
+                const weeksPerMonth = 52 / 12;
+                const startWeek = Math.floor(monthIndex * weeksPerMonth);
+                const endWeek = Math.floor((monthIndex + 1) * weeksPerMonth);
+                const weekSpan = endWeek - startWeek;
+                
+                return (
+                  <div 
+                    key={month} 
+                    className="text-xs font-medium text-gray-600 dark:text-gray-400 text-center"
+                    style={{ 
+                      width: `${weekSpan * 100 / 52}%`
+                    }}
+                  >
+                    {month}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Day Labels and Heatmap */}
+            <div className="flex" style={{ aspectRatio: '52/7' }}>
+              {/* Day of Week Labels */}
+              <div className="flex flex-col mr-2 w-16" style={{ height: '100%' }}>
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, dayIndex) => (
+                  <div key={day} className="text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center" style={{ height: 'calc(100% / 7)' }}>
+                    {day}
+                  </div>
+                ))}
+              </div>
+              
+              {/* Heatmap Grid */}
+              <div className="grid gap-1 flex-1" style={{ 
+                gridTemplateColumns: 'repeat(52, 1fr)',
+                gridTemplateRows: 'repeat(7, 1fr)'
+              }}>
+                {Array.from({ length: 52 * 7 }, (_, index) => {
+                  const data = heatmapData[index];
+                  if (!data) return <div key={index} className="w-full h-full min-w-[8px] min-h-[8px]" />;
+                  
+                  const formattedDate = new Date(data.date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  });
+                  
+                  return (
+                    <div
+                      key={index}
+                      className="w-full h-full min-w-[8px] min-h-[8px] rounded-sm cursor-pointer hover:scale-105 transition-transform"
+                      style={{ backgroundColor: getIntensityColor(data.count) }}
+                      title={`${formattedDate}\nStudy time: ${data.count * 30} minutes`}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            
             <div className="flex items-center justify-between mt-4 text-sm text-gray-600">
               <span>Less</span>
               <div className="flex space-x-1">
