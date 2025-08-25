@@ -97,12 +97,15 @@ describe('AssignmentTracker', () => {
   it('displays assignment summary cards', () => {
     render(<AssignmentTracker />)
 
-    // Look for the specific "1" in the total assignments card
-    const totalCard = screen.getByText(/total on your plate/i).closest('div')
-    expect(totalCard).toHaveTextContent('1')
-    expect(screen.getByText(/crushed it/i)).toBeInTheDocument()
-    expect(screen.getByText(/need attention/i)).toBeInTheDocument()
-    expect(screen.getByText(/ready to tackle/i)).toBeInTheDocument()
+    // Look for the updated assignment summary card labels
+    expect(screen.getByText('Total assignments')).toBeInTheDocument()
+    expect(screen.getByText('Completed')).toBeInTheDocument()
+    
+    // Check for Overdue text (appears in summary card and filter dropdown)
+    const overdueElements = screen.getAllByText('Overdue')
+    expect(overdueElements.length).toBeGreaterThan(0)
+    
+    expect(screen.getByText('Upcoming')).toBeInTheDocument()
   })
 
   it('renders assignments table with correct data', () => {

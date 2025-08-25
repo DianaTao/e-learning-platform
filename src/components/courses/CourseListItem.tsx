@@ -63,7 +63,7 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 group bg-white">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 group bg-white dark:bg-gray-800">
       <div className="flex items-start space-x-4">
         {/* Course Image */}
         <div className="relative flex-shrink-0">
@@ -75,8 +75,8 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
           
           {/* Progress Indicator for Enrolled Courses */}
           {isEnrolled && course.progress > 0 && (
-            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
-              <div className="w-6 h-6 rounded-full border-2 border-gray-200 flex items-center justify-center">
+            <div className="absolute -bottom-1 -right-1 bg-white dark:bg-gray-800 rounded-full p-1 shadow-sm">
+              <div className="w-6 h-6 rounded-full border-2 border-gray-200 dark:border-gray-600 flex items-center justify-center">
                 <div 
                   className="w-4 h-4 rounded-full bg-primary-500 transition-all duration-300"
                   style={{
@@ -102,12 +102,12 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
                 </span>
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-primary-600 transition-colors">
                 {course.title}
               </h3>
               
               {/* Instructor */}
-              <div className="flex items-center text-sm text-gray-600 mb-2">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
                 <img
                   src={course.instructor.avatar || '/api/placeholder/24/24'}
                   alt={course.instructor.name}
@@ -120,12 +120,12 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
                 </div>
               </div>
 
-              <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
                 {course.description}
               </p>
 
               {/* Course Meta */}
-              <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
+              <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-2">
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-1" />
                   <span>{course.estimatedHours}h</span>
@@ -152,7 +152,7 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
 
               {/* Last Accessed */}
               {isEnrolled && course.lastAccessedDate && (
-                <div className="flex items-center text-sm text-gray-500 mb-3">
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
                   <Calendar className="w-4 h-4 mr-1" />
                   <span>Last accessed: {formatLastAccessed(course.lastAccessedDate)}</span>
                 </div>
@@ -161,13 +161,13 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
               {/* Progress Bar for Enrolled Courses */}
               {isEnrolled && course.progress > 0 && (
                 <div className="mb-3">
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
                     <span>Progress</span>
                     <span>{course.completedLessons} / {course.totalLessons} lessons</span>
                   </div>
-                  <div className="progress-bar">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
-                      className="progress-fill"
+                      className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${course.progress}%` }}
                     />
                   </div>
@@ -179,13 +179,13 @@ export const CourseListItem: React.FC<CourseListItemProps> = ({
                 {course.tags.slice(0, 4).map((tag, index) => (
                   <span
                     key={index}
-                    className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
+                    className="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded"
                   >
                     {tag}
                   </span>
                 ))}
                 {course.tags.length > 4 && (
-                  <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                  <span className="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded">
                     +{course.tags.length - 4} more
                   </span>
                 )}

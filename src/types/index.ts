@@ -165,12 +165,26 @@ export interface UploadedFile {
 }
 
 // Analytics Types
+export interface SkillLevel {
+  subject: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  progress: number; // 0-100
+  experience: number;
+  nextLevel: number;
+  badges: string[];
+}
+
 export interface UserAnalytics {
   overview: AnalyticsOverview;
   studyTime: StudyTimeData;
   courseBreakdown: CourseAnalytics[];
   achievements: Achievement[];
   goals: LearningGoal[];
+  weeklyGoals: WeeklyGoal[];
+  courseGoals: CourseGoal[];
+  learningPaces: LearningPace[];
+  weeklyProgress: { date: string; hours: number; target: number }[];
+  skillLevels: SkillLevel[];
 }
 
 export interface AnalyticsOverview {
@@ -207,6 +221,23 @@ export interface MonthlyStudyTime {
   lessonsCompleted: number;
 }
 
+export interface AnalyticsLesson {
+  id: string;
+  title: string;
+  completedAt?: Date;
+  timeSpent: number; // in minutes
+  quizScore?: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
+export interface AnalyticsModule {
+  id: string;
+  title: string;
+  lessons: AnalyticsLesson[];
+  totalTime: number;
+  averageScore: number;
+}
+
 export interface CourseAnalytics {
   courseId: string;
   courseName: string;
@@ -216,6 +247,9 @@ export interface CourseAnalytics {
   lessonsCompleted: number;
   totalLessons: number;
   lastAccessed: Date;
+  modules: AnalyticsModule[];
+  quizScores: { date: string; score: number }[];
+  studyTimeTrend: { date: string; minutes: number }[];
 }
 
 export interface Achievement {
@@ -223,9 +257,14 @@ export interface Achievement {
   title: string;
   description: string;
   icon: string;
+  category: 'progress' | 'streak' | 'score' | 'milestone' | 'skill';
   unlockedAt?: Date;
   progress: number; // 0-100
   requirements: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  points: number;
+  skillLevel?: string;
+  subject?: string;
 }
 
 export interface LearningGoal {
@@ -237,6 +276,43 @@ export interface LearningGoal {
   unit: 'hours' | 'courses' | 'assignments' | 'streak';
   deadline?: Date;
   completed: boolean;
+}
+
+export interface WeeklyGoal {
+  id: string;
+  title: string;
+  description: string;
+  targetValue: number;
+  currentValue: number;
+  unit: 'hours' | 'lessons' | 'courses';
+  deadline: Date;
+  completed: boolean;
+  weeklyTarget: number;
+  dailyAverage: number;
+  daysRemaining: number;
+  onTrack: boolean;
+}
+
+export interface CourseGoal {
+  id: string;
+  courseId: string;
+  courseName: string;
+  targetCompletionDate: Date;
+  currentProgress: number;
+  estimatedCompletionDate: Date;
+  onTrack: boolean;
+  classAverage: number;
+  personalPace: number;
+  paceComparison: 'ahead' | 'behind' | 'on_track';
+}
+
+export interface LearningPace {
+  courseId: string;
+  courseName: string;
+  personalPace: number; // lessons per week
+  classAverage: number;
+  difference: number;
+  status: 'ahead' | 'behind' | 'on_track';
 }
 
 // API Response Types

@@ -355,11 +355,11 @@ export const AssignmentTracker: React.FC = () => {
               <FileText className="w-6 h-6 text-white" />
             </div>
             <span className="text-blue-600 dark:text-blue-300 text-sm font-medium bg-blue-100 dark:bg-blue-900/40 px-3 py-1 rounded-full">
-              All tasks
+              Total assignments
             </span>
           </div>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{totalAssignments}</p>
-          <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">total on your plate</p>
+          <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">total assignments</p>
         </div>
 
         <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-gray-900 dark:via-emerald-900/20 dark:to-green-900/10 rounded-2xl p-6 border border-emerald-100 dark:border-emerald-800/30 shadow-sm dark:shadow-emerald-900/20">
@@ -368,11 +368,11 @@ export const AssignmentTracker: React.FC = () => {
               <CheckCircle className="w-6 h-6 text-white" />
             </div>
             <span className="text-emerald-600 dark:text-emerald-300 text-sm font-medium bg-emerald-100 dark:bg-emerald-900/40 px-3 py-1 rounded-full">
-              {completedAssignments > 0 ? 'Nice!' : 'Let\'s go'}
+              Completed
             </span>
           </div>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{completedAssignments}</p>
-          <p className="text-emerald-700 dark:text-emerald-300 text-sm font-medium">crushed it 🎉</p>
+          <p className="text-emerald-700 dark:text-emerald-300 text-sm font-medium">completed</p>
         </div>
 
         <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-gray-900 dark:via-red-900/20 dark:to-rose-900/10 rounded-2xl p-6 border border-red-100 dark:border-red-800/30 shadow-sm dark:shadow-red-900/20">
@@ -381,11 +381,11 @@ export const AssignmentTracker: React.FC = () => {
               <AlertCircle className="w-6 h-6 text-white" />
             </div>
             <span className="text-red-600 dark:text-red-300 text-sm font-medium bg-red-100 dark:bg-red-900/40 px-3 py-1 rounded-full">
-              {overdueAssignments > 0 ? 'Uh oh' : 'Clear!'}
+              Overdue
             </span>
           </div>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{overdueAssignments}</p>
-          <p className="text-red-700 dark:text-red-300 text-sm font-medium">{overdueAssignments > 0 ? 'need attention' : 'all caught up'}</p>
+          <p className="text-red-700 dark:text-red-300 text-sm font-medium">overdue</p>
         </div>
 
         <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-900 dark:via-amber-900/20 dark:to-yellow-900/10 rounded-2xl p-6 border border-amber-100 dark:border-amber-800/30 shadow-sm dark:shadow-amber-900/20">
@@ -394,11 +394,11 @@ export const AssignmentTracker: React.FC = () => {
               <Clock className="w-6 h-6 text-white" />
             </div>
             <span className="text-amber-600 dark:text-amber-300 text-sm font-medium bg-amber-100 dark:bg-amber-900/40 px-3 py-1 rounded-full">
-              Coming up
+              Upcoming
             </span>
           </div>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{upcomingAssignments}</p>
-          <p className="text-amber-700 dark:text-amber-300 text-sm font-medium">ready to tackle</p>
+          <p className="text-amber-700 dark:text-amber-300 text-sm font-medium">upcoming</p>
         </div>
       </div>
 

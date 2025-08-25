@@ -75,6 +75,27 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     return new Date(date).toLocaleDateString();
   };
 
+  const calculateEstimatedTimeRemaining = () => {
+    if (!isEnrolled || course.progress === 0) return null;
+    
+    const remainingLessons = course.totalLessons - course.completedLessons;
+    if (remainingLessons <= 0) return 'Completed!';
+    
+    // Calculate average time per lesson based on estimated hours
+    const averageMinutesPerLesson = (course.estimatedHours * 60) / course.totalLessons;
+    const remainingMinutes = remainingLessons * averageMinutesPerLesson;
+    
+    // Convert to hours and minutes
+    const hours = Math.floor(remainingMinutes / 60);
+    const minutes = Math.round(remainingMinutes % 60);
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes > 0 ? `${minutes}m` : ''}`;
+    } else {
+      return `${minutes}m`;
+    }
+  };
+
   return (
     <div 
       ref={cardRef}
@@ -170,6 +191,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           </div>
         </div>
 
+        {/* Estimated Time Remaining (for enrolled courses with progress) */}
+        {isEnrolled && course.progress > 0 && (
+          <div className="flex items-center text-sm text-gray-500 mb-3">
+            <Clock className="w-4 h-4 mr-1 text-blue-500" />
+            <span className="font-medium text-blue-600 dark:text-blue-400">
+              Estimated time remaining: {calculateEstimatedTimeRemaining()}
+            </span>
+          </div>
+        )}
+
         {/* Last Accessed (for enrolled courses) */}
         {isEnrolled && course.lastAccessedDate && (
           <div className="flex items-center text-sm text-gray-500 mb-3">
@@ -202,7 +233,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center group"
           >
             <Play className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-            {course.progress === 0 ? 'Let\'s start! 🚀' : 'Keep going! 💪'}
+            {course.progress === 0 ? 'Let\'s start! 🚀' : 'Continue Learning! 💪'}
           </button>
         ) : (
           <button

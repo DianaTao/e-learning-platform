@@ -36,10 +36,11 @@ describe('CourseCard', () => {
     expect(screen.getByText(/58% done/i)).toBeInTheDocument()
   })
 
-  it('shows "Keep going! 💪" button for enrolled courses with progress', () => {
+  it('shows "Continue Learning! 💪" button for enrolled courses with progress', () => {
     render(<CourseCard {...defaultProps} />)
 
-    const continueButton = screen.getByRole('button', { name: /keep going/i })
+    const buttons = screen.getAllByRole('button')
+    const continueButton = buttons.find(button => button.textContent?.includes('Continue Learning'))
     expect(continueButton).toBeInTheDocument()
   })
 
@@ -67,8 +68,10 @@ describe('CourseCard', () => {
     const user = userEvent.setup()
     render(<CourseCard {...defaultProps} />)
 
-    const continueButton = screen.getByRole('button', { name: /keep going/i })
-    await user.click(continueButton)
+    // Find the actual button element (not the card div)
+    const continueButton = screen.getByText('Continue Learning! 💪').closest('button')
+    expect(continueButton).toBeInTheDocument()
+    await user.click(continueButton!)
 
     expect(mockOnContinue).toHaveBeenCalled()
   })
@@ -96,11 +99,39 @@ describe('CourseCard', () => {
     expect(screen.getByText(/2h/i)).toBeInTheDocument()
   })
 
+  it('displays estimated time remaining for enrolled courses with progress', () => {
+    render(<CourseCard {...defaultProps} />)
+
+    // Should show estimated time remaining for enrolled courses with progress
+    expect(screen.getByText(/estimated time remaining/i)).toBeInTheDocument()
+    expect(screen.getByText(/50m/i)).toBeInTheDocument() // Based on mockCourse data: 5 remaining lessons * 10 min each = 50m
+  })
+
+  it('does not display estimated time remaining for non-enrolled courses', () => {
+    render(<CourseCard {...defaultProps} isEnrolled={false} />)
+
+    // Should not show estimated time remaining for non-enrolled courses
+    expect(screen.queryByText(/estimated time remaining/i)).not.toBeInTheDocument()
+  })
+
+  it('does not display estimated time remaining for enrolled courses with no progress', () => {
+    const courseWithNoProgress = {
+      ...mockCourse,
+      progress: 0,
+      completedLessons: 0,
+    }
+    
+    render(<CourseCard {...defaultProps} course={courseWithNoProgress} />)
+
+    // Should not show estimated time remaining for courses with no progress
+    expect(screen.queryByText(/estimated time remaining/i)).not.toBeInTheDocument()
+  })
+
   it('supports keyboard navigation', async () => {
     const user = userEvent.setup()
     render(<CourseCard {...defaultProps} />)
 
-    const card = screen.getByRole('button', { name: /continue learning/i })
+    const card = screen.getByRole('button', { name: /react fundamentals - continue learning/i })
     
     // Test focus
     await user.tab()
@@ -114,7 +145,7 @@ describe('CourseCard', () => {
   it('has proper accessibility attributes', () => {
     render(<CourseCard {...defaultProps} />)
 
-    const card = screen.getByRole('button', { name: /continue learning/i })
+    const card = screen.getByRole('button', { name: /react fundamentals - continue learning/i })
     expect(card).toHaveAttribute('tabIndex', '0')
     expect(card).toHaveAttribute('aria-label', `${mockCourse.title} - Continue learning`)
   })

@@ -177,18 +177,18 @@ export const AssignmentDetailModal: React.FC<AssignmentDetailModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             {getStatusIcon()}
             <div>
-              <h2 id="modal-title" className="text-xl font-semibold text-gray-900">{assignment.title}</h2>
-              <p className="text-sm text-gray-600">{assignment.courseName}</p>
+              <h2 id="modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100">{assignment.title}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{assignment.courseName}</p>
             </div>
           </div>
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -210,17 +210,17 @@ export const AssignmentDetailModal: React.FC<AssignmentDetailModalProps> = ({
         )}
 
         {/* Assignment Info */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <Calendar className="w-4 h-4 mr-2" />
               <span>Due: {format(new Date(assignment.dueDate), 'MMM dd, yyyy h:mm a')}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <Star className="w-4 h-4 mr-2" />
               <span>Points: {assignment.points}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <FileText className="w-4 h-4 mr-2" />
               <span>Type: {assignment.submissionType}</span>
             </div>
@@ -286,36 +286,36 @@ export const AssignmentDetailModal: React.FC<AssignmentDetailModalProps> = ({
             <div className="space-y-6">
               {/* Description */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Description</h3>
-                <p className="text-gray-700 whitespace-pre-wrap">{assignment.description}</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Description</h3>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{assignment.description}</p>
               </div>
 
               {/* Instructions */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Instructions</h3>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-gray-700 whitespace-pre-wrap">{assignment.instructions}</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Instructions</h3>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{assignment.instructions}</p>
                 </div>
               </div>
 
               {/* Requirements */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Requirements</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Requirements</h3>
                 <div className="space-y-2">
                   {assignment.allowedFileTypes && (
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <FileText className="w-4 h-4 mr-2" />
                       <span>Allowed file types: {assignment.allowedFileTypes.join(', ')}</span>
                     </div>
                   )}
                   {assignment.maxFileSize && (
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Upload className="w-4 h-4 mr-2" />
                       <span>Maximum file size: {assignment.maxFileSize} MB</span>
                     </div>
                   )}
                   {assignment.maxAttempts && (
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <AlertCircle className="w-4 h-4 mr-2" />
                       <span>Maximum attempts: {assignment.maxAttempts}</span>
                     </div>
@@ -325,7 +325,7 @@ export const AssignmentDetailModal: React.FC<AssignmentDetailModalProps> = ({
 
               {/* Related Resources */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Related Resources</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Related Resources</h3>
                 <div className="space-y-2">
                   <a href="#" className="flex items-center text-primary-600 hover:text-primary-700 text-sm">
                     <ExternalLink className="w-4 h-4 mr-2" />
@@ -531,29 +531,36 @@ export const AssignmentDetailModal: React.FC<AssignmentDetailModalProps> = ({
 
               {/* View Rubric Button */}
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Assignment Rubric</h3>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-blue-700 mb-2">
-                        View the grading rubric for this assignment
-                      </p>
-                      <p className="text-xs text-blue-600">
-                        PDF format • Opens in new tab
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        // Mock PDF URL - in real implementation, this would come from assignment.rubricUrl
-                        const rubricUrl = `https://cdn.example.com/rubrics/${assignment.id}-rubric.pdf`;
-                        window.open(rubricUrl, '_blank');
-                      }}
-                      className="btn btn-sm btn-primary"
-                    >
-                      <FileText className="w-4 h-4 mr-2" />
-                      View Rubric
-                    </button>
-                  </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Assignment Rubric</h3>
+                <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Criteria</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Score</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Max</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Percent</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                      {(assignment.feedback.rubricScores && assignment.feedback.rubricScores.length > 0
+                        ? assignment.feedback.rubricScores
+                        : [
+                            { criteria: 'Clarity', score: 4, maxScore: 5 },
+                            { criteria: 'Completeness', score: 9, maxScore: 10 },
+                            { criteria: 'Quality', score: 18, maxScore: 20 },
+                            { criteria: 'Originality', score: 9, maxScore: 10 },
+                          ]
+                        ).map((row, idx) => (
+                        <tr key={idx}>
+                          <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">{row.criteria}</td>
+                          <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.score}</td>
+                          <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{row.maxScore}</td>
+                          <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{Math.round((row.score / row.maxScore) * 100)}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

@@ -26,6 +26,9 @@ import {
 import { useAppStore } from '@/stores/appStore';
 import { useAuthStore } from '@/stores/authStore';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { AchievementSystem } from '@/components/achievements/AchievementSystem';
+import { DetailedCourseBreakdown } from '@/components/analytics/DetailedCourseBreakdown';
+import { EnhancedLearningGoals } from '@/components/analytics/EnhancedLearningGoals';
 import { format, subDays } from 'date-fns';
 
 export const ProgressAnalytics: React.FC = () => {
@@ -69,6 +72,8 @@ export const ProgressAnalytics: React.FC = () => {
     progress: course.progress,
     timeSpent: Math.round(course.timeSpent / 60 * 10) / 10
   }));
+
+  const coursePieColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#14b8a6', '#eab308', '#06b6d4'];
 
   // Generate heatmap data for the last 364 days (52 weeks × 7 days)
   const generateHeatmapData = () => {
@@ -255,29 +260,29 @@ export const ProgressAnalytics: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Distribution */}
+        {/* Completion Rate by Course */}
         <div className="card">
           <div className="card-header">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Time by Category</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Completion Rate by Course</h2>
           </div>
           <div className="card-body">
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={categoryData}
-                    dataKey="hours"
+                    data={courseProgressData}
+                    dataKey="progress"
                     nameKey="name"
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    {courseProgressData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={coursePieColors[index % coursePieColors.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value}h`, 'Hours']} />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Progress']} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -376,156 +381,25 @@ export const ProgressAnalytics: React.FC = () => {
         </div>
       </div>
 
-      {/* Achievements and Goals */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Achievements */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Achievements</h2>
-          </div>
-          <div className="card-body">
-            <div className="space-y-4">
-              {analytics.achievements.map((achievement) => (
-                <div
-                  key={achievement.id}
-                  className={`flex items-center p-4 rounded-lg border transition-all duration-200 ${
-                    achievement.unlockedAt 
-                      ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-900 dark:via-green-900/20 dark:to-emerald-900/10 border-green-200 dark:border-green-800/30 shadow-sm dark:shadow-green-900/20' 
-                      : 'bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:via-gray-800/50 dark:to-slate-900/30 border-gray-200 dark:border-gray-700/50 shadow-sm dark:shadow-gray-900/20'
-                  }`}
-                >
-                  <div className="text-2xl mr-4">{achievement.icon}</div>
-                  <div className="flex-1">
-                    <h3 className={`font-medium ${
-                      achievement.unlockedAt ? 'text-green-900 dark:text-green-100' : 'text-gray-700 dark:text-gray-300'
-                    }`}>
-                      {achievement.title}
-                    </h3>
-                    <p className={`text-sm ${
-                      achievement.unlockedAt ? 'text-green-600 dark:text-green-300' : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {achievement.description}
-                    </p>
-                    {!achievement.unlockedAt && (
-                      <div className="mt-2">
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${achievement.progress}%` }}
-                          />
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {achievement.progress}% complete
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  {achievement.unlockedAt && (
-                    <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Achievement System */}
+      <AchievementSystem 
+        achievements={analytics.achievements}
+        skillLevels={analytics.skillLevels}
+        onAchievementUnlocked={(achievement) => {
+          console.log('Achievement unlocked:', achievement.title);
+        }}
+      />
 
-        {/* Learning Goals */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Learning Goals</h2>
-          </div>
-          <div className="card-body">
-            <div className="space-y-4">
-              {analytics.goals.map((goal) => (
-                <div key={goal.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:via-gray-800/50 dark:to-slate-900/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-900 dark:text-white">{goal.title}</h3>
-                    <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{goal.description}</p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
-                    <span>Progress</span>
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {goal.currentValue.toFixed(1)} / {goal.targetValue} {goal.unit}
-                    </span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
-                    <div 
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        goal.completed ? 'bg-green-600 dark:bg-green-500' : 'bg-blue-600 dark:bg-blue-500'
-                      }`}
-                      style={{ width: `${Math.min((goal.currentValue / goal.targetValue) * 100, 100)}%` }}
-                    />
-                  </div>
-                  
-                  {goal.deadline && (
-                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      <span>Due: {format(new Date(goal.deadline), 'MMM dd, yyyy')}</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Enhanced Learning Goals */}
+      <EnhancedLearningGoals 
+        weeklyGoals={analytics.weeklyGoals}
+        courseGoals={analytics.courseGoals}
+        learningPaces={analytics.learningPaces}
+        weeklyProgress={analytics.weeklyProgress}
+      />
 
-      {/* Course Breakdown */}
-      <div className="card">
-        <div className="card-header">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Detailed Course Breakdown</h2>
-        </div>
-        <div className="card-body">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                  <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Course</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Progress</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Time Spent</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Avg. Score</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Last Accessed</th>
-                </tr>
-              </thead>
-              <tbody>
-                {analytics.courseBreakdown.map((course) => (
-                  <tr key={course.courseId} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="py-3 px-4">
-                      <div className="font-medium text-gray-900 dark:text-white">{course.courseName}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {course.lessonsCompleted} / {course.totalLessons} lessons
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center">
-                        <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
-                          <div 
-                            className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${course.progress}%` }}
-                          />
-                        </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{course.progress}%</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">
-                      {Math.round(course.timeSpent / 60 * 10) / 10}h
-                    </td>
-                    <td className="py-3 px-4 text-gray-900 dark:text-white font-medium">
-                      {course.averageQuizScore > 0 ? `${course.averageQuizScore}%` : 'N/A'}
-                    </td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-300">
-                      {format(new Date(course.lastAccessed), 'MMM dd, yyyy')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      {/* Detailed Course Breakdown */}
+      <DetailedCourseBreakdown courses={analytics.courseBreakdown} />
     </div>
   );
 };

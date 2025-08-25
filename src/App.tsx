@@ -6,6 +6,7 @@ import { AuthPage } from '@/pages/AuthPage';
 import { CourseDashboard } from '@/pages/CourseDashboard';
 import { AssignmentTracker } from '@/pages/AssignmentTracker';
 import { ProgressAnalytics } from '@/pages/ProgressAnalytics';
+import { UserProfile } from '@/pages/UserProfile';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Layout } from '@/components/layout/Layout';
 
@@ -58,6 +59,17 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <ProgressAnalytics />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <UserProfile />
               </Layout>
             </ProtectedRoute>
           }
