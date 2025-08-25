@@ -107,6 +107,7 @@ export function useAssignments(filters?: AssignmentFilters) {
 
         addToast({
           type: updatedAssignment.status === 'submitted' ? 'success' : 'info',
+          title: 'Assignment Updated',
           message: statusMessages[updatedAssignment.status as keyof typeof statusMessages] || 'Assignment updated',
           duration: 3000
         });
@@ -156,6 +157,7 @@ export function useAssignments(filters?: AssignmentFilters) {
         
         addToast({
           type: 'success',
+          title: 'Assignment Submitted',
           message: 'Assignment submitted successfully!',
           duration: 3000
         });
